@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hệ thống Quản lý Cháy rừng - An Giang</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="container">
+      <!-- Sidebar -->
+      <div id="sidebar">
+        <div class="sidebar-header">
+          <h2>
+            <i class="fas fa-fire"></i>
+            HỆ THỐNG QUẢN LÝ CHÁY RỪNG
+          </h2>
+          <p style="color: #bdc3c7; margin-top: 5px; font-size: 0.9em">
+            Tỉnh An Giang
+          </p>
+        </div>
+
+        <div class="sidebar-content">
+          <!-- Form Thêm Điểm Cháy -->
+          <div class="section">
+            <h3><i class="fas fa-plus-circle"></i> THÊM ĐIỂM CHÁY MỚI</h3>
+            <div class="form-group">
+              <label for="fireName"
+                ><i class="fas fa-fire-alt"></i> Tên điểm cháy:</label
+              >
+              <input
+                type="text"
+                id="fireName"
+                placeholder="Nhập tên điểm cháy"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fireDistrict"
+                ><i class="fas fa-map-marker-alt"></i> Huyện/Thành phố:</label
+              >
+              <select id="fireDistrict">
+                <option value="">Chọn huyện</option>
+                <option value="Long Xuyên">Long Xuyên</option>
+                <option value="Châu Đốc">Châu Đốc</option>
+                <option value="An Phú">An Phú</option>
+                <option value="Tân Châu">Tân Châu</option>
+                <option value="Phú Tân">Phú Tân</option>
+                <option value="Châu Phú">Châu Phú</option>
+                <option value="Tịnh Biên">Tịnh Biên</option>
+                <option value="Tri Tôn">Tri Tôn</option>
+                <option value="Chợ Mới">Chợ Mới</option>
+                <option value="Thoại Sơn">Thoại Sơn</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="fireLat"
+                ><i class="fas fa-globe-asia"></i> Vĩ độ:</label
+              >
+              <input
+                type="number"
+                id="fireLat"
+                step="any"
+                placeholder="Ví dụ: 10.386"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fireLng"
+                ><i class="fas fa-globe-asia"></i> Kinh độ:</label
+              >
+              <input
+                type="number"
+                id="fireLng"
+                step="any"
+                placeholder="Ví dụ: 105.435"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="discoveryTime"
+                ><i class="fas fa-clock"></i> Thời gian phát hiện:</label
+              >
+              <input type="datetime-local" id="discoveryTime" />
+            </div>
+
+            <div class="form-group">
+              <label for="dangerLevel"
+                ><i class="fas fa-exclamation-triangle"></i> Mức độ nguy
+                hiểm:</label
+              >
+              <select id="dangerLevel">
+                <option value="low">🟢 Thấp</option>
+                <option value="medium">🟡 Trung bình</option>
+                <option value="high">🔴 Cao</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="affectedArea"
+                ><i class="fas fa-ruler-combined"></i> Diện tích ảnh hưởng
+                (ha):</label
+              >
+              <input
+                type="number"
+                id="affectedArea"
+                placeholder="Nhập diện tích"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="fireCause"
+                ><i class="fas fa-search"></i> Nguyên nhân:</label
+              >
+              <textarea
+                id="fireCause"
+                placeholder="Mô tả nguyên nhân cháy..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="newsUrl"
+                ><i class="fas fa-newspaper"></i> URL báo chí (tùy chọn):</label
+              >
+              <input
+                type="url"
+                id="newsUrl"
+                placeholder="https://example.com/bai-bao"
+              />
+              <div class="error-message" id="urlError">
+                <i class="fas fa-exclamation-circle"></i> URL không hợp lệ!
+              </div>
+            </div>
+
+            <button id="addFireBtn">
+              <i class="fas fa-plus"></i> THÊM ĐIỂM CHÁY
+            </button>
+          </div>
+
+          <!-- Tìm Kiếm Theo Thời Gian -->
+          <div class="section">
+            <h3><i class="fas fa-search"></i> TÌM KIẾM THEO THỜI GIAN</h3>
+            <div class="time-filter">
+              <input
+                type="datetime-local"
+                id="startTime"
+                placeholder="Từ ngày"
+              />
+              <input
+                type="datetime-local"
+                id="endTime"
+                placeholder="Đến ngày"
+              />
+            </div>
+            <div class="button-group">
+              <button id="searchBtn">
+                <i class="fas fa-search"></i> TÌM KIẾM
+              </button>
+              <button id="resetSearchBtn" class="btn-secondary">
+                <i class="fas fa-sync-alt"></i> HIỂN THỊ TẤT CẢ
+              </button>
+            </div>
+          </div>
+
+          <!-- Bộ Lọc Dữ Liệu -->
+          <div class="section">
+            <h3><i class="fas fa-filter"></i> BỘ LỌC DỮ LIỆU</h3>
+            <div class="form-group">
+              <label for="filterDistrict"
+                ><i class="fas fa-map"></i> Theo huyện:</label
+              >
+              <select id="filterDistrict">
+                <option value="">Tất cả huyện</option>
+                <option value="Long Xuyên">Long Xuyên</option>
+                <option value="Châu Đốc">Châu Đốc</option>
+                <option value="An Phú">An Phú</option>
+                <option value="Tân Châu">Tân Châu</option>
+                <option value="Phú Tân">Phú Tân</option>
+                <option value="Châu Phú">Châu Phú</option>
+                <option value="Tịnh Biên">Tịnh Biên</option>
+                <option value="Tri Tôn">Tri Tôn</option>
+                <option value="Chợ Mới">Chợ Mới</option>
+                <option value="Thoại Sơn">Thoại Sơn</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="filterDangerLevel"
+                ><i class="fas fa-skull-crossbones"></i> Theo mức độ:</label
+              >
+              <select id="filterDangerLevel">
+                <option value="">Tất cả mức độ</option>
+                <option value="low">🟢 Thấp</option>
+                <option value="medium">🟡 Trung bình</option>
+                <option value="high">🔴 Cao</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Thống Kê -->
+          <div class="section">
+            <h3><i class="fas fa-chart-bar"></i> THỐNG KÊ</h3>
+
+            <div class="stats-grid">
+              <div class="stat-card warning">
+                <span class="stat-value" id="totalFires">0</span>
+                <span class="stat-label">Tổng số vụ cháy</span>
+              </div>
+              <div class="stat-card danger">
+                <span class="stat-value" id="activeFires">0</span>
+                <span class="stat-label">Đang hoạt động</span>
+              </div>
+              <div class="stat-card success">
+                <span class="stat-value" id="totalArea">0</span>
+                <span class="stat-label">Diện tích (ha)</span>
+              </div>
+              <div class="stat-card info">
+                <span class="stat-value" id="firesWithNews">0</span>
+                <span class="stat-label">Có báo chí</span>
+              </div>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="dangerLevelChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="districtChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+              <canvas id="newsChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bản Đồ -->
+      <div id="map"></div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Custom JavaScript Files -->
+    <script src="config.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
