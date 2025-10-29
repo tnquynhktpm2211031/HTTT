@@ -20,8 +20,302 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="styles.css" />
+    <style>
+      :root {
+        --primary-color: #e74c3c;
+        --secondary-color: #2c3e50;
+        --accent-color: #3498db;
+        --light-color: #ecf0f1;
+        --dark-color: #34495e;
+        --success-color: #27ae60;
+        --warning-color: #f39c12;
+        --danger-color: #c0392b;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f5f5f5;
+        color: #333;
+        overflow: hidden;
+      }
+
+      #container {
+        display: flex;
+        height: 100vh;
+      }
+
+      /* Sidebar Styles */
+      #sidebar {
+        width: 400px;
+        background-color: var(--secondary-color);
+        color: white;
+        overflow-y: auto;
+        transition: all 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .sidebar-header {
+        padding: 20px;
+        background-color: var(--dark-color);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar-header h2 {
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-header h2 i {
+        margin-right: 10px;
+        color: var(--primary-color);
+      }
+
+      .sidebar-content {
+        padding: 15px;
+      }
+
+      .section {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .section-header {
+        padding: 15px;
+        background-color: rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background-color 0.2s;
+      }
+
+      .section-header:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+      }
+
+      .section-header h3 {
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        margin: 0;
+      }
+
+      .section-header h3 i {
+        margin-right: 10px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .section-content {
+        padding: 0 15px;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
+
+      .section.active .section-content {
+        padding: 15px;
+        max-height: 1000px;
+      }
+
+      .section.active .toggle-icon {
+        transform: rotate(180deg);
+      }
+
+      .toggle-icon {
+        transition: transform 0.3s ease;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+        color: var(--light-color);
+      }
+
+      .form-group label i {
+        margin-right: 8px;
+        width: 16px;
+        text-align: center;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: rgb(8, 8, 8);
+        font-size: 0.9rem;
+      }
+
+      .form-group input::placeholder,
+      .form-group textarea::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .form-group textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.2s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      button i {
+        margin-right: 8px;
+      }
+
+      button:hover {
+        background-color: #c0392b;
+      }
+
+      .btn-secondary {
+        background-color: var(--accent-color);
+      }
+
+      .btn-secondary:hover {
+        background-color: #2980b9;
+      }
+
+      .time-filter {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+      }
+
+      .button-group button {
+        flex: 1;
+      }
+
+      .error-message {
+        color: var(--primary-color);
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .error-message i {
+        margin-right: 5px;
+      }
+
+      /* Stats Styles */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .stat-card {
+        padding: 15px;
+        border-radius: 6px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.1);
+      }
+
+      .stat-card.warning {
+        background-color: rgba(243, 156, 18, 0.2);
+        border-left: 3px solid var(--warning-color);
+      }
+
+      .stat-card.danger {
+        background-color: rgba(192, 57, 43, 0.2);
+        border-left: 3px solid var(--danger-color);
+      }
+
+      .stat-card.success {
+        background-color: rgba(39, 174, 96, 0.2);
+        border-left: 3px solid var(--success-color);
+      }
+
+      .stat-card.info {
+        background-color: rgba(52, 152, 219, 0.2);
+        border-left: 3px solid var(--accent-color);
+      }
+
+      .stat-value {
+        display: block;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        color: var(--light-color);
+      }
+
+      .chart-container {
+        margin-top: 15px;
+        background-color: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 6px;
+      }
+
+      .chart-container canvas {
+        width: 100% !important;
+        height: 150px !important;
+      }
+
+      /* Map Styles */
+      #map {
+        flex: 1;
+        height: 100%;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        #container {
+          flex-direction: column;
+        }
+
+        #sidebar {
+          width: 100%;
+          height: 50vh;
+        }
+
+        #map {
+          height: 50vh;
+        }
+      }
+    </style>
   </head>
   <body>
     <div id="container">
@@ -39,215 +333,235 @@
 
         <div class="sidebar-content">
           <!-- Form Thêm Điểm Cháy -->
-          <div class="section">
-            <h3><i class="fas fa-plus-circle"></i> THÊM ĐIỂM CHÁY MỚI</h3>
-            <div class="form-group">
-              <label for="fireName"
-                ><i class="fas fa-fire-alt"></i> Tên điểm cháy:</label
-              >
-              <input
-                type="text"
-                id="fireName"
-                placeholder="Nhập tên điểm cháy"
-              />
+          <div class="section active">
+            <div class="section-header">
+              <h3><i class="fas fa-plus-circle"></i> THÊM ĐIỂM CHÁY MỚI</h3>
+              <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-
-            <div class="form-group">
-              <label for="fireDistrict"
-                ><i class="fas fa-map-marker-alt"></i> Huyện/Thành phố:</label
-              >
-              <select id="fireDistrict">
-                <option value="">Chọn huyện</option>
-                <option value="Long Xuyên">Long Xuyên</option>
-                <option value="Châu Đốc">Châu Đốc</option>
-                <option value="An Phú">An Phú</option>
-                <option value="Tân Châu">Tân Châu</option>
-                <option value="Phú Tân">Phú Tân</option>
-                <option value="Châu Phú">Châu Phú</option>
-                <option value="Tịnh Biên">Tịnh Biên</option>
-                <option value="Tri Tôn">Tri Tôn</option>
-                <option value="Chợ Mới">Chợ Mới</option>
-                <option value="Thoại Sơn">Thoại Sơn</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="fireLat"
-                ><i class="fas fa-globe-asia"></i> Vĩ độ:</label
-              >
-              <input
-                type="number"
-                id="fireLat"
-                step="any"
-                placeholder="Ví dụ: 10.386"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="fireLng"
-                ><i class="fas fa-globe-asia"></i> Kinh độ:</label
-              >
-              <input
-                type="number"
-                id="fireLng"
-                step="any"
-                placeholder="Ví dụ: 105.435"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="discoveryTime"
-                ><i class="fas fa-clock"></i> Thời gian phát hiện:</label
-              >
-              <input type="datetime-local" id="discoveryTime" />
-            </div>
-
-            <div class="form-group">
-              <label for="dangerLevel"
-                ><i class="fas fa-exclamation-triangle"></i> Mức độ nguy
-                hiểm:</label
-              >
-              <select id="dangerLevel">
-                <option value="low">🟢 Thấp</option>
-                <option value="medium">🟡 Trung bình</option>
-                <option value="high">🔴 Cao</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="affectedArea"
-                ><i class="fas fa-ruler-combined"></i> Diện tích ảnh hưởng
-                (ha):</label
-              >
-              <input
-                type="number"
-                id="affectedArea"
-                placeholder="Nhập diện tích"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="fireCause"
-                ><i class="fas fa-search"></i> Nguyên nhân:</label
-              >
-              <textarea
-                id="fireCause"
-                placeholder="Mô tả nguyên nhân cháy..."
-              ></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="newsUrl"
-                ><i class="fas fa-newspaper"></i> URL báo chí (tùy chọn):</label
-              >
-              <input
-                type="url"
-                id="newsUrl"
-                placeholder="https://example.com/bai-bao"
-              />
-              <div class="error-message" id="urlError">
-                <i class="fas fa-exclamation-circle"></i> URL không hợp lệ!
+            <div class="section-content">
+              <div class="form-group">
+                <label for="fireName"
+                  ><i class="fas fa-fire-alt"></i> Tên điểm cháy:</label
+                >
+                <input
+                  type="text"
+                  id="fireName"
+                  placeholder="Nhập tên điểm cháy"
+                />
               </div>
-            </div>
 
-            <button id="addFireBtn">
-              <i class="fas fa-plus"></i> THÊM ĐIỂM CHÁY
-            </button>
+              <div class="form-group">
+                <label for="fireDistrict"
+                  ><i class="fas fa-map-marker-alt"></i> Huyện/Thành phố:</label
+                >
+                <select id="fireDistrict">
+                  <option value="">Chọn huyện</option>
+                  <option value="Long Xuyên">Long Xuyên</option>
+                  <option value="Châu Đốc">Châu Đốc</option>
+                  <option value="An Phú">An Phú</option>
+                  <option value="Tân Châu">Tân Châu</option>
+                  <option value="Phú Tân">Phú Tân</option>
+                  <option value="Châu Phú">Châu Phú</option>
+                  <option value="Tịnh Biên">Tịnh Biên</option>
+                  <option value="Tri Tôn">Tri Tôn</option>
+                  <option value="Chợ Mới">Chợ Mới</option>
+                  <option value="Thoại Sơn">Thoại Sơn</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="fireLat"
+                  ><i class="fas fa-globe-asia"></i> Vĩ độ:</label
+                >
+                <input
+                  type="number"
+                  id="fireLat"
+                  step="any"
+                  placeholder="Ví dụ: 10.386"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="fireLng"
+                  ><i class="fas fa-globe-asia"></i> Kinh độ:</label
+                >
+                <input
+                  type="number"
+                  id="fireLng"
+                  step="any"
+                  placeholder="Ví dụ: 105.435"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="discoveryTime"
+                  ><i class="fas fa-clock"></i> Thời gian phát hiện:</label
+                >
+                <input type="datetime-local" id="discoveryTime" />
+              </div>
+
+              <div class="form-group">
+                <label for="dangerLevel"
+                  ><i class="fas fa-exclamation-triangle"></i> Mức độ nguy
+                  hiểm:</label
+                >
+                <select id="dangerLevel">
+                  <option value="low">🟢 Thấp</option>
+                  <option value="medium">🟡 Trung bình</option>
+                  <option value="high">🔴 Cao</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="affectedArea"
+                  ><i class="fas fa-ruler-combined"></i> Diện tích ảnh hưởng
+                  (ha):</label
+                >
+                <input
+                  type="number"
+                  id="affectedArea"
+                  placeholder="Nhập diện tích"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="fireCause"
+                  ><i class="fas fa-search"></i> Nguyên nhân:</label
+                >
+                <textarea
+                  id="fireCause"
+                  placeholder="Mô tả nguyên nhân cháy..."
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="newsUrl"
+                  ><i class="fas fa-newspaper"></i> URL báo chí (tùy
+                  chọn):</label
+                >
+                <input
+                  type="url"
+                  id="newsUrl"
+                  placeholder="https://example.com/bai-bao"
+                />
+                <div class="error-message" id="urlError">
+                  <i class="fas fa-exclamation-circle"></i> URL không hợp lệ!
+                </div>
+              </div>
+
+              <button id="addFireBtn">
+                <i class="fas fa-plus"></i> THÊM ĐIỂM CHÁY
+              </button>
+            </div>
           </div>
 
           <!-- Tìm Kiếm Theo Thời Gian -->
           <div class="section">
-            <h3><i class="fas fa-search"></i> TÌM KIẾM THEO THỜI GIAN</h3>
-            <div class="time-filter">
-              <input
-                type="datetime-local"
-                id="startTime"
-                placeholder="Từ ngày"
-              />
-              <input
-                type="datetime-local"
-                id="endTime"
-                placeholder="Đến ngày"
-              />
+            <div class="section-header">
+              <h3><i class="fas fa-search"></i> TÌM KIẾM THEO THỜI GIAN</h3>
+              <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
-            <div class="button-group">
-              <button id="searchBtn">
-                <i class="fas fa-search"></i> TÌM KIẾM
-              </button>
-              <button id="resetSearchBtn" class="btn-secondary">
-                <i class="fas fa-sync-alt"></i> HIỂN THỊ TẤT CẢ
-              </button>
+            <div class="section-content">
+              <div class="time-filter">
+                <input
+                  type="datetime-local"
+                  id="startTime"
+                  placeholder="Từ ngày"
+                />
+                <input
+                  type="datetime-local"
+                  id="endTime"
+                  placeholder="Đến ngày"
+                />
+              </div>
+              <div class="button-group">
+                <button id="searchBtn">
+                  <i class="fas fa-search"></i> TÌM KIẾM
+                </button>
+                <button id="resetSearchBtn" class="btn-secondary">
+                  <i class="fas fa-sync-alt"></i> HIỂN THỊ TẤT CẢ
+                </button>
+              </div>
             </div>
           </div>
 
           <!-- Bộ Lọc Dữ Liệu -->
           <div class="section">
-            <h3><i class="fas fa-filter"></i> BỘ LỌC DỮ LIỆU</h3>
-            <div class="form-group">
-              <label for="filterDistrict"
-                ><i class="fas fa-map"></i> Theo huyện:</label
-              >
-              <select id="filterDistrict">
-                <option value="">Tất cả huyện</option>
-                <option value="Long Xuyên">Long Xuyên</option>
-                <option value="Châu Đốc">Châu Đốc</option>
-                <option value="An Phú">An Phú</option>
-                <option value="Tân Châu">Tân Châu</option>
-                <option value="Phú Tân">Phú Tân</option>
-                <option value="Châu Phú">Châu Phú</option>
-                <option value="Tịnh Biên">Tịnh Biên</option>
-                <option value="Tri Tôn">Tri Tôn</option>
-                <option value="Chợ Mới">Chợ Mới</option>
-                <option value="Thoại Sơn">Thoại Sơn</option>
-              </select>
+            <div class="section-header">
+              <h3><i class="fas fa-filter"></i> BỘ LỌC DỮ LIỆU</h3>
+              <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
+            <div class="section-content">
+              <div class="form-group">
+                <label for="filterDistrict"
+                  ><i class="fas fa-map"></i> Theo huyện:</label
+                >
+                <select id="filterDistrict">
+                  <option value="">Tất cả huyện</option>
+                  <option value="Long Xuyên">Long Xuyên</option>
+                  <option value="Châu Đốc">Châu Đốc</option>
+                  <option value="An Phú">An Phú</option>
+                  <option value="Tân Châu">Tân Châu</option>
+                  <option value="Phú Tân">Phú Tân</option>
+                  <option value="Châu Phú">Châu Phú</option>
+                  <option value="Tịnh Biên">Tịnh Biên</option>
+                  <option value="Tri Tôn">Tri Tôn</option>
+                  <option value="Chợ Mới">Chợ Mới</option>
+                  <option value="Thoại Sơn">Thoại Sơn</option>
+                </select>
+              </div>
 
-            <div class="form-group">
-              <label for="filterDangerLevel"
-                ><i class="fas fa-skull-crossbones"></i> Theo mức độ:</label
-              >
-              <select id="filterDangerLevel">
-                <option value="">Tất cả mức độ</option>
-                <option value="low">🟢 Thấp</option>
-                <option value="medium">🟡 Trung bình</option>
-                <option value="high">🔴 Cao</option>
-              </select>
+              <div class="form-group">
+                <label for="filterDangerLevel"
+                  ><i class="fas fa-skull-crossbones"></i> Theo mức độ:</label
+                >
+                <select id="filterDangerLevel">
+                  <option value="">Tất cả mức độ</option>
+                  <option value="low">🟢 Thấp</option>
+                  <option value="medium">🟡 Trung bình</option>
+                  <option value="high">🔴 Cao</option>
+                </select>
+              </div>
             </div>
           </div>
 
           <!-- Thống Kê -->
           <div class="section">
-            <h3><i class="fas fa-chart-bar"></i> THỐNG KÊ</h3>
-
-            <div class="stats-grid">
-              <div class="stat-card warning">
-                <span class="stat-value" id="totalFires">0</span>
-                <span class="stat-label">Tổng số vụ cháy</span>
-              </div>
-              <div class="stat-card danger">
-                <span class="stat-value" id="activeFires">0</span>
-                <span class="stat-label">Đang hoạt động</span>
-              </div>
-              <div class="stat-card success">
-                <span class="stat-value" id="totalArea">0</span>
-                <span class="stat-label">Diện tích (ha)</span>
-              </div>
-              <div class="stat-card info">
-                <span class="stat-value" id="firesWithNews">0</span>
-                <span class="stat-label">Có báo chí</span>
-              </div>
+            <div class="section-header">
+              <h3><i class="fas fa-chart-bar"></i> THỐNG KÊ</h3>
+              <i class="fas fa-chevron-down toggle-icon"></i>
             </div>
+            <div class="section-content">
+              <div class="stats-grid">
+                <div class="stat-card warning">
+                  <span class="stat-value" id="totalFires">0</span>
+                  <span class="stat-label">Tổng số vụ cháy</span>
+                </div>
+                <div class="stat-card danger">
+                  <span class="stat-value" id="activeFires">0</span>
+                  <span class="stat-label">Đang hoạt động</span>
+                </div>
+                <div class="stat-card success">
+                  <span class="stat-value" id="totalArea">0</span>
+                  <span class="stat-label">Diện tích (ha)</span>
+                </div>
+                <div class="stat-card info">
+                  <span class="stat-value" id="firesWithNews">0</span>
+                  <span class="stat-label">Có báo chí</span>
+                </div>
+              </div>
 
-            <div class="chart-container">
-              <canvas id="dangerLevelChart"></canvas>
-            </div>
+              <div class="chart-container">
+                <canvas id="dangerLevelChart"></canvas>
+              </div>
 
-            <div class="chart-container">
-              <canvas id="districtChart"></canvas>
-            </div>
+              <div class="chart-container">
+                <canvas id="districtChart"></canvas>
+              </div>
 
-            <div class="chart-container">
-              <canvas id="newsChart"></canvas>
+              <div class="chart-container">
+                <canvas id="newsChart"></canvas>
+              </div>
             </div>
           </div>
         </div>
@@ -260,6 +574,25 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <script>
+      // Toggle section functionality
+      document.querySelectorAll('.section-header').forEach(header => {
+        header.addEventListener('click', function() {
+          const section = this.parentElement;
+          section.classList.toggle('active');
+        });
+      });
+
+      // Placeholder for existing JavaScript logic
+      // These would be in your existing config.js, data.js, and app.js files
+      // The functionality remains the same, only the UI has been enhanced
+      
+      // Mock data for demonstration
+      document.getElementById('totalFires').textContent = '12';
+      document.getElementById('activeFires').textContent = '3';
+      document.getElementById('totalArea').textContent = '45.5';
+      document.getElementById('firesWithNews').textContent = '8';
+    </script>
     <!-- Custom JavaScript Files -->
     <script src="config.js"></script>
     <script src="data.js"></script>
